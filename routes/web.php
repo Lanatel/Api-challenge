@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\WebsiteDataController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,3 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'index');
+
+Route::prefix('website-scores')->group(function () {
+    Route::get('/', [WebsiteDataController::class, 'index']);
+    Route::put('/', [WebsiteDataController::class, 'update']);
+});
