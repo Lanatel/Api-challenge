@@ -12,27 +12,27 @@ use Illuminate\Support\Collection;
 
 class RedisWebsiteDataStorage implements WebsiteDataStorage
 {
-    const CACHE_KEY = 'website_score';
+    const CACHE_KEY = 'website_data';
 
     /**
      * @var Repository
      */
-    protected $cache;
+    protected Repository $cache;
 
     /**
      * @var WebsiteDataProvider
      */
-    protected WebsiteDataProvider $scoreProvider;
+    protected WebsiteDataProvider $dataProvider;
 
     /**
-     * RedisWebsiteScoreStorage constructor.
+     * RedisWebsiteDataStorage constructor.
      * @param CacheManager $cache
-     * @param WebsiteDataProvider $scoreProvider
+     * @param WebsiteDataProvider $dataProvider
      */
-    public function __construct(CacheManager $cache, WebsiteDataProvider $scoreProvider)
+    public function __construct(CacheManager $cache, WebsiteDataProvider $dataProvider)
     {
         $this->cache = $cache->store('redis');
-        $this->scoreProvider = $scoreProvider;
+        $this->dataProvider = $dataProvider;
     }
 
     /**
@@ -43,7 +43,7 @@ class RedisWebsiteDataStorage implements WebsiteDataStorage
     public function get(): Collection
     {
         return $this->cache->rememberForever(self::CACHE_KEY, function () {
-            return $this->scoreProvider->data();
+            return $this->dataProvider->data();
         });
     }
 
@@ -57,7 +57,7 @@ class RedisWebsiteDataStorage implements WebsiteDataStorage
     {
         return $this->cache->forever(
             self::CACHE_KEY,
-            $this->scoreProvider->data()
+            $this->dataProvider->data()
         );
     }
 }
